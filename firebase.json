@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"reddit-3ca8a","appId":"1:768598223620:android:2491a0cbf407cfebc97e51","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"reddit-3ca8a","configurations":{"android":"1:768598223620:android:2491a0cbf407cfebc97e51","ios":"1:768598223620:ios:b0607c641707cbdbc97e51"}}}}}}
