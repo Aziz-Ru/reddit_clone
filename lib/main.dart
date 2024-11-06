@@ -1,9 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit/core/error/error_text.dart';
 import 'package:reddit/core/themes/appthems.dart';
-import 'package:reddit/features/auth/screens/login_screen.dart';
+import 'package:reddit/core/widgets/loader.dart';
+import 'package:reddit/features/auth/controller/auth_controller.dart';
 import 'package:reddit/firebase_options.dart';
+import 'package:reddit/model/user_model.dart';
+import 'package:reddit/router.dart';
+import 'package:routemaster/routemaster.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,17 +17,45 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  UserModel? user;
+  void getUserData(WidgetRef ref, User data) async {
+    user = await ref
+        .watch(authControllProvider.notifier)
+        .getUserData(data.uid)
+        .first;
+    ref.read(userProvider.notifier).update((state) => user);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Reddit',
-      theme: AppTheme.darkThemeMode,
-      debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
-    );
+    return ref.watch(authStateChangesProvider).when(
+        data: (data) => MaterialApp.router(
+              title: 'Reddit',
+              theme: AppTheme.darkThemeMode,
+              debugShowCheckedModeBanner: false,
+              routerDelegate: RoutemasterDelegate(routesBuilder: (context) {
+                if (data != null) {
+                  getUserData(ref, data);
+                  if (user != null) {
+                    return loggedInRoute;
+                  }
+                }
+                return loggedOutRoute;
+              }),
+              routeInformationParser: const RoutemasterParser(),
+            ),
+        error: (error, stackRace) => ErrorText(
+              text: error.toString(),
+            ),
+        loading: () => const Loader());
   }
 }
