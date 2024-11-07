@@ -55,4 +55,35 @@ class CommunityRepository {
     return _communites.doc(name).snapshots().map(
         (event) => Community.fromMap(event.data() as Map<String, dynamic>));
   }
+
+  FutureVoid editCommunity(Community community) async {
+    try {
+      final res =
+          await _communites.doc(community.name).update(community.toMap());
+      return right(res);
+    } on FirebaseException catch (e) {
+      return left(Failure(e.message!));
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  Stream<List<Community>> searchCommunites(String query) {
+    return _communites
+        .where('name',
+            isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+            isLessThan: query.isEmpty
+                ? null
+                : query.substring(0, query.length - 1) +
+                    String.fromCharCode(query.codeUnitAt(query.length - 1) + 1))
+        .snapshots()
+        .map((events) {
+      List<Community> communities = [];
+
+      for (var doc in events.docs) {
+        communities.add(Community.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return communities;
+    });
+  }
 }

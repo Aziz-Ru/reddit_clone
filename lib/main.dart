@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit/core/error/error_text.dart';
+import 'package:reddit/core/secrets/app_secrets.dart';
 import 'package:reddit/core/themes/appthems.dart';
 import 'package:reddit/core/widgets/loader.dart';
 import 'package:reddit/features/auth/controller/auth_controller.dart';
@@ -10,10 +11,13 @@ import 'package:reddit/firebase_options.dart';
 import 'package:reddit/model/user_model.dart';
 import 'package:reddit/router.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Supabase.initialize(
+      anonKey: AppSecrets.supabaseAnonKey, url: AppSecrets.supabaseUrl);
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -26,7 +30,8 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   UserModel? user;
-  void getUserData(WidgetRef ref, User data) async {
+
+  void getUserData(WidgetRef ref, firebase_auth.User data) async {
     user = await ref
         .watch(authControllProvider.notifier)
         .getUserData(data.uid)
