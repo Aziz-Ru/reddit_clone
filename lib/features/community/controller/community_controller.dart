@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:reddit/core/constants/constants.dart';
+import 'package:reddit/core/error/failure.dart';
 import 'package:reddit/core/providers/supabase_storage_provider.dart';
 import 'package:reddit/core/utils/show_snackbar.dart';
 import 'package:reddit/features/auth/controller/auth_controller.dart';
@@ -112,5 +114,34 @@ class CommunityController extends StateNotifier<bool> {
 
   Stream<List<Community>> searchCommunity(String query) {
     return _communityRepository.searchCommunites(query);
+  }
+
+  void joinCommunity(Community community, BuildContext context) async {
+    final user = _ref.read(userProvider)!;
+    Either<Failure, void> response;
+    if (community.members.contains(user.uid)) {
+      response =
+          await _communityRepository.leaveCommunity(community.name, user.uid);
+    } else {
+      response =
+          await _communityRepository.joinCommunity(community.name, user.uid);
+    }
+    response.fold((l) => showSnackBar(context, l.message), (r) {
+      if (community.members.contains(user.uid)) {
+        showSnackBar(context, 'Community left successfully');
+        return;
+      } else {
+        showSnackBar(context, 'Community joined successfully');
+      }
+    });
+  }
+
+  void addMods(
+      String communityName, List<String> uids, BuildContext context) async {
+    final response = await _communityRepository.addMods(uids, communityName);
+    response.fold((l) => showSnackBar(context, l.message), (r) {
+      showSnackBar(context, 'Mods added successfully');
+      Routemaster.of(context).pop();
+    });
   }
 }

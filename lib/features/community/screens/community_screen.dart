@@ -13,8 +13,9 @@ class CommunityScreen extends ConsumerStatefulWidget {
 }
 
 class _CommunityScreenState extends ConsumerState<CommunityScreen> {
-  TextEditingController _namecontroller = TextEditingController();
-  TextEditingController _descriptioncontroller = TextEditingController();
+  
+  final TextEditingController _namecontroller = TextEditingController();
+  final TextEditingController _descriptioncontroller = TextEditingController();
 
   void createCommunity() {
     if (_namecontroller.text.trim().isEmpty ||
