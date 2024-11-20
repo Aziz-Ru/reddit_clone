@@ -11,6 +11,7 @@ import 'package:reddit/features/auth/controller/auth_controller.dart';
 import 'package:reddit/features/community/repo/community_repository.dart';
 import 'package:reddit/model/community_model.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:uuid/uuid.dart';
 
 final communityProvider =
     StateNotifierProvider<CommunityController, bool>((ref) {
@@ -88,8 +89,9 @@ class CommunityController extends StateNotifier<bool> {
       required Community community,
       required BuildContext context}) async {
     state = true;
-    final bannerUid = '${community.id}_banner';
-    final avatarUid = '${community.id}_avatar';
+    final uuid = Uuid();
+    final bannerUid = '${community.id}${uuid.v1()}_banner';
+    final avatarUid = '${community.id}${uuid.v1()}_avatar';
     if (bannerImage != null) {
       final imageUploadResponse = await _supabaseStorageRepository.uploadImage(
           image: bannerImage, id: bannerUid);

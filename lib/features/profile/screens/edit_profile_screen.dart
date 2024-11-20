@@ -8,6 +8,7 @@ import 'package:reddit/core/error/error_text.dart';
 import 'package:reddit/core/utils/pick_image.dart';
 import 'package:reddit/core/widgets/loader.dart';
 import 'package:reddit/features/auth/controller/auth_controller.dart';
+import 'package:reddit/features/profile/controller/user_profile_controller.dart';
 
 class EditProfile extends ConsumerStatefulWidget {
   final String uid;
@@ -51,9 +52,17 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     }
   }
 
+  void editProfile() {
+    ref.read(userProfileControllerProvider.notifier).editProfile(
+        avatarImage: avatarImage,
+        bannerImage: bannerImage,
+        name: nameController.text.trim(),
+        context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isLoading = false;
+    final isLoading = ref.watch(userProfileControllerProvider);
 
     return ref.watch(getUserDataProvider(widget.uid)).when(
         data: (community) => Scaffold(
@@ -61,7 +70,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                 centerTitle: false,
                 title: const Text('Edit Profile'),
                 actions: [
-                  TextButton(onPressed: () {}, child: const Text('Save'))
+                  TextButton(
+                      onPressed: () => editProfile(), child: const Text('Save'))
                 ],
               ),
               body: isLoading
