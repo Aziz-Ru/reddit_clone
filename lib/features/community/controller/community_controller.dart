@@ -89,7 +89,7 @@ class CommunityController extends StateNotifier<bool> {
       required Community community,
       required BuildContext context}) async {
     state = true;
-    final uuid = Uuid();
+    const uuid = Uuid();
     final bannerUid = '${community.id}${uuid.v1()}_banner';
     final avatarUid = '${community.id}${uuid.v1()}_avatar';
     if (bannerImage != null) {
@@ -101,6 +101,7 @@ class CommunityController extends StateNotifier<bool> {
     if (avatarImage != null) {
       final imageUploadResponse = await _supabaseStorageRepository.uploadImage(
           image: avatarImage, id: avatarUid);
+          
       imageUploadResponse.fold((l) => showSnackBar(context, l.message),
           (r) => community = community.copyWith(avatar: r));
     }

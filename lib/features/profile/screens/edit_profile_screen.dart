@@ -123,6 +123,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                                         ),
                                             )),
                                       ),
+                                      
                                       Positioned(
                                           bottom: 20,
                                           left: 20,

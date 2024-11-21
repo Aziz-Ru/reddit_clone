@@ -5,7 +5,7 @@ class AppTheme {
   static _border([Color color = AppColors.borderColor]) => OutlineInputBorder(
         borderSide: BorderSide(
           color: color,
-          width: 3,
+          width: 1,
         ),
         borderRadius: BorderRadius.circular(10),
       );

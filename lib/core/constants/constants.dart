@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reddit/features/community/screens/community_screen.dart';
+import 'package:reddit/features/feed/screen/feed_screen.dart';
 import 'package:reddit/features/message/screens/message_screen.dart';
 import 'package:reddit/features/notifications/screens/notification_screen.dart';
-import 'package:reddit/features/feed/screen/post_screen.dart';
 import 'package:reddit/features/posts/screens/add_post_screen.dart';
 
 class Constants {
@@ -16,7 +16,7 @@ class Constants {
       'https://external-preview.redd.it/5kh5OreeLd85QsqYO1Xz_4XSLYwZntfjqou-8fyBFoE.png?auto=webp&s=dbdabd04c399ce9c761ff899f5d38656d1de87c2';
 
   static const tabWidgets = [
-    PostScreen(),
+    FeedScreen(),
     CommunityScreen(),
     AddPostScreen(),
     MessageScreen(),
@@ -29,4 +29,15 @@ class Constants {
       IconData(0xe801, fontFamily: 'MyFlutterApp', fontPackage: null);
 
   static const awardsPath = 'assets/images/awards';
+
+  static const awards = {
+    'awesomeAns': '${Constants.awardsPath}/awesomeanswer.png',
+    'gold': '${Constants.awardsPath}/gold.png',
+    'platinum': '${Constants.awardsPath}/platinum.png',
+    'helpful': '${Constants.awardsPath}/helpful.png',
+    'plusone': '${Constants.awardsPath}/plusone.png',
+    'rocket': '${Constants.awardsPath}/rocket.png',
+    'thankyou': '${Constants.awardsPath}/thankyou.png',
+    'til': '${Constants.awardsPath}/til.png',
+  };
 }
