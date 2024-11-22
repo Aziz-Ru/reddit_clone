@@ -10,6 +10,7 @@ import 'package:reddit/core/utils/show_snackbar.dart';
 import 'package:reddit/features/auth/controller/auth_controller.dart';
 import 'package:reddit/features/community/repo/community_repository.dart';
 import 'package:reddit/model/community_model.dart';
+import 'package:reddit/model/post_model.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
 
@@ -36,6 +37,10 @@ final getCommunityByNameProvider = StreamProvider.family((ref, String name) {
 final searchCommunityProvider = StreamProvider.family((ref, String q) {
   final controller = ref.watch(communityProvider.notifier);
   return controller.searchCommunity(q);
+});
+
+final getCommunitPostProvider = StreamProvider.family((ref, String name) {
+  return ref.read(communityProvider.notifier).getCommunityPosts(name);
 });
 
 class CommunityController extends StateNotifier<bool> {
@@ -101,7 +106,7 @@ class CommunityController extends StateNotifier<bool> {
     if (avatarImage != null) {
       final imageUploadResponse = await _supabaseStorageRepository.uploadImage(
           image: avatarImage, id: avatarUid);
-          
+
       imageUploadResponse.fold((l) => showSnackBar(context, l.message),
           (r) => community = community.copyWith(avatar: r));
     }
@@ -146,5 +151,9 @@ class CommunityController extends StateNotifier<bool> {
       showSnackBar(context, 'Mods added successfully');
       Routemaster.of(context).pop();
     });
+  }
+
+  Stream<List<Post>> getCommunityPosts(String name) {
+    return _communityRepository.getCommunityPosts(name);
   }
 }

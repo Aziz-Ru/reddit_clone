@@ -5,6 +5,7 @@ import 'package:reddit/core/constants/firebase_constants.dart';
 import 'package:reddit/core/error/failure.dart';
 import 'package:reddit/core/providers/firebase_providers.dart';
 import 'package:reddit/core/type_def.dart';
+import 'package:reddit/model/comment_model.dart';
 import 'package:reddit/model/community_model.dart';
 import 'package:reddit/model/post_model.dart';
 
@@ -122,35 +123,35 @@ class PostRepository {
         .map((event) => Post.fromMap(event.data() as Map<String, dynamic>));
   }
 
-  // FutureVoid addComment(Comment comment) async {
-  //   try {
-  //     await _comments.doc(comment.id).set(comment.toMap());
+  FutureVoid addComment(Comment comment) async {
+    try {
+      await _comments.doc(comment.id).set(comment.toMap());
 
-  //     return right(_posts.doc(comment.postId).update({
-  //       'commentCount': FieldValue.increment(1),
-  //     }));
-  //   } on FirebaseException catch (e) {
-  //     throw e.message!;
-  //   } catch (e) {
-  //     return left(Failure(e.toString()));
-  //   }
-  // }
+      return right(_posts.doc(comment.postId).update({
+        'commentCount': FieldValue.increment(1),
+      }));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
 
-  // Stream<List<Comment>> getCommentsOfPost(String postId) {
-  //   return _comments
-  //       .where('postId', isEqualTo: postId)
-  //       .orderBy('createdAt', descending: true)
-  //       .snapshots()
-  //       .map(
-  //         (event) => event.docs
-  //             .map(
-  //               (e) => Comment.fromMap(
-  //                 e.data() as Map<String, dynamic>,
-  //               ),
-  //             )
-  //             .toList(),
-  //       );
-  // }
+  Stream<List<Comment>> getCommentsOfPost(String postId) {
+    return _comments
+        .where('postId', isEqualTo: postId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map(
+                (e) => Comment.fromMap(
+                  e.data() as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        );
+  }
 
   FutureVoid awardPost(Post post, String award, String senderId) async {
     try {

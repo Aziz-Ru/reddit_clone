@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit/core/enums/enums.dart';
 import 'package:reddit/core/providers/supabase_storage_provider.dart';
 import 'package:reddit/core/utils/show_snackbar.dart';
 import 'package:reddit/features/auth/controller/auth_controller.dart';
 import 'package:reddit/features/posts/repository/post_repository.dart';
+import 'package:reddit/features/profile/controller/user_profile_controller.dart';
+import 'package:reddit/model/comment_model.dart';
 import 'package:reddit/model/community_model.dart';
 import 'package:reddit/model/post_model.dart';
 import 'package:routemaster/routemaster.dart';
@@ -23,12 +26,14 @@ final postControllerProvider =
   );
 });
 
+// user posts provider
 final userPostsProvider =
     StreamProvider.family((ref, List<Community> communities) {
   final postController = ref.watch(postControllerProvider.notifier);
   return postController.fetchUserPosts(communities);
 });
 
+// guest posts provider
 final guestPostsProvider = StreamProvider((ref) {
   final postController = ref.watch(postControllerProvider.notifier);
   return postController.fetchGuestPosts();
@@ -39,10 +44,10 @@ final getPostByIdProvider = StreamProvider.family((ref, String postId) {
   return postController.getPostById(postId);
 });
 
-// final getPostCommentsProvider = StreamProvider.family((ref, String postId) {
-//   final postController = ref.watch(postControllerProvider.notifier);
-//   return postController.fetchPostComments(postId);
-// });
+final getPostCommentsProvider = StreamProvider.family((ref, String postId) {
+  final postController = ref.watch(postControllerProvider.notifier);
+  return postController.fetchPostComments(postId);
+});
 
 // Post controller
 
@@ -87,9 +92,9 @@ class PostController extends StateNotifier<bool> {
 
     final res = await _postRepository.addPost(post);
 
-    // _ref
-    //     .read(userProfileControllerProvider.notifier)
-    //     .updateUserKarma(UserKarma.textPost);
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKarma(UserKarma.textPost);
 
     state = false;
 
@@ -127,9 +132,9 @@ class PostController extends StateNotifier<bool> {
 
     final res = await _postRepository.addPost(post);
 
-    // _ref
-    //     .read(userProfileControllerProvider.notifier)
-    //     .updateUserKarma(UserKarma.linkPost);
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKarma(UserKarma.linkPost);
 
     state = false;
     res.fold((l) => showSnackBar(context, l.message), (r) {
@@ -172,9 +177,9 @@ class PostController extends StateNotifier<bool> {
 
       final res = await _postRepository.addPost(post);
 
-      // _ref
-      //     .read(userProfileControllerProvider.notifier)
-      //     .updateUserKarma(UserKarma.imagePost);
+      _ref
+          .read(userProfileControllerProvider.notifier)
+          .updateUserKarma(UserKarma.imagePost);
 
       state = false;
       res.fold((l) => showSnackBar(context, l.message), (r) {
@@ -195,14 +200,14 @@ class PostController extends StateNotifier<bool> {
     return _postRepository.fetchGuestPosts();
   }
 
-  // void deletePost(Post post, BuildContext context) async {
-  //   final res = await _postRepository.deletePost(post);
-  //   _ref
-  //       .read(userProfileControllerProvider.notifier)
-  //       .updateUserKarma(UserKarma.deletePost);
-  //   res.fold((l) => null,
-  //       (r) => showSnackBar(context, 'Post Deleted successfully!'));
-  // }
+  void deletePost(Post post, BuildContext context) async {
+    final res = await _postRepository.deletePost(post);
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKarma(UserKarma.deletePost);
+    res.fold((l) => null,
+        (r) => showSnackBar(context, 'Post Deleted successfully!'));
+  }
 
   void upvote(Post post) async {
     final uid = _ref.read(userProvider)!.uid;
@@ -218,50 +223,50 @@ class PostController extends StateNotifier<bool> {
     return _postRepository.getPostById(postId);
   }
 
-  // void addComment({
-  //   required BuildContext context,
-  //   required String text,
-  //   required Post post,
-  // }) async {
-  //   final user = _ref.read(userProvider)!;
-  //   String commentId = const Uuid().v1();
-  //   Comment comment = Comment(
-  //     id: commentId,
-  //     text: text,
-  //     createdAt: DateTime.now(),
-  //     postId: post.id,
-  //     username: user.name,
-  //     profilePic: user.profilePic,
-  //   );
-  //   final res = await _postRepository.addComment(comment);
-  //   _ref
-  //       .read(userProfileControllerProvider.notifier)
-  //       .updateUserKarma(UserKarma.comment);
-  //   res.fold((l) => showSnackBar(context, l.message), (r) => null);
-  // }
+  void addComment({
+    required BuildContext context,
+    required String text,
+    required Post post,
+  }) async {
+    final user = _ref.read(userProvider)!;
+    String commentId = const Uuid().v1();
+    Comment comment = Comment(
+      id: commentId,
+      text: text,
+      createdAt: DateTime.now(),
+      postId: post.id,
+      username: user.name,
+      profilePic: user.profilePic,
+    );
+    final res = await _postRepository.addComment(comment);
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKarma(UserKarma.comment);
+    res.fold((l) => showSnackBar(context, l.message), (r) => null);
+  }
 
-  // void awardPost({
-  //   required Post post,
-  //   required String award,
-  //   required BuildContext context,
-  // }) async {
-  //   final user = _ref.read(userProvider)!;
+  void awardPost({
+    required Post post,
+    required String award,
+    required BuildContext context,
+  }) async {
+    final user = _ref.read(userProvider)!;
 
-  //   final res = await _postRepository.awardPost(post, award, user.uid);
+    final res = await _postRepository.awardPost(post, award, user.uid);
 
-  //   res.fold((l) => showSnackBar(context, l.message), (r) {
-  //     _ref
-  //         .read(userProfileControllerProvider.notifier)
-  //         .updateUserKarma(UserKarma.awardPost);
-  //     _ref.read(userProvider.notifier).update((state) {
-  //       state?.awards.remove(award);
-  //       return state;
-  //     });
-  //     Routemaster.of(context).pop();
-  //   });
-  // }
+    res.fold((l) => showSnackBar(context, l.message), (r) {
+      _ref
+          .read(userProfileControllerProvider.notifier)
+          .updateUserKarma(UserKarma.awardPost);
+      _ref.read(userProvider.notifier).update((state) {
+        state?.awards.remove(award);
+        return state;
+      });
+      Routemaster.of(context).pop();
+    });
+  }
 
-  // Stream<List<Comment>> fetchPostComments(String postId) {
-  //   return _postRepository.getCommentsOfPost(postId);
-  // }
+  Stream<List<Comment>> fetchPostComments(String postId) {
+    return _postRepository.getCommentsOfPost(postId);
+  }
 }

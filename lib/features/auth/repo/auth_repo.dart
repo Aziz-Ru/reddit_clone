@@ -10,13 +10,10 @@ import 'package:reddit/core/providers/firebase_providers.dart';
 import 'package:reddit/core/type_def.dart';
 import 'package:reddit/model/user_model.dart';
 
-
 final authRepositoryProvider = Provider((ref) => (AuthRepository(
     firestore: ref.read(firestoreProvider),
     auth: ref.read(authProvider),
     googleSignIn: ref.read(googleSignInProvider))));
-
-
 
 class AuthRepository {
   final FirebaseFirestore _firestore;
@@ -32,7 +29,7 @@ class AuthRepository {
         _googleSignIn = googleSignIn;
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
-  
+
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   FutureEither<UserModel> signInwithGoogle() async {
@@ -56,7 +53,16 @@ class AuthRepository {
           uid: userCredential.user!.uid,
           isAuthenticated: true,
           karma: 0,
-          awards: [],
+          awards: [
+            'awesomeAns',
+            'gold',
+            'platinum',
+            'helpful',
+            'plusone',
+            'rocket',
+            'thankyou',
+            'til',
+          ],
         );
 
         await _users.doc(userCredential.user!.uid).set(user.toMap());
@@ -79,10 +85,9 @@ class AuthRepository {
     return _users.doc(uid).snapshots().map(
         (event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
   }
-  void logout()async{
+
+  void logout() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
-    
   }
-
 }

@@ -18,9 +18,9 @@ class PostCard extends ConsumerWidget {
     required this.post,
   });
 
-  // void deletePost(WidgetRef ref, BuildContext context) async {
-  //   ref.read(postControllerProvider.notifier).deletePost(post, context);
-  // }
+  void deletePost(WidgetRef ref, BuildContext context) async {
+    ref.read(postControllerProvider.notifier).deletePost(post, context);
+  }
 
   void upvotePost(WidgetRef ref) async {
     ref.read(postControllerProvider.notifier).upvote(post);
@@ -39,7 +39,7 @@ class PostCard extends ConsumerWidget {
   }
 
   void navigateToCommunity(BuildContext context) {
-    Routemaster.of(context).push('/r/${post.communityName}');
+    Routemaster.of(context).push('/community/${post.communityName}');
   }
 
   void navigateToComments(BuildContext context) {
@@ -122,7 +122,7 @@ class PostCard extends ConsumerWidget {
                               ),
                               if (post.uid == user.uid)
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () => deletePost(ref, context),
                                   icon: const Icon(
                                     Icons.delete,
                                     color: AppColors.redColor,
@@ -130,6 +130,7 @@ class PostCard extends ConsumerWidget {
                                 ),
                             ],
                           ),
+                          //post title
                           if (post.awards.isNotEmpty) ...[
                             const SizedBox(height: 5),
                             SizedBox(
@@ -148,7 +149,7 @@ class PostCard extends ConsumerWidget {
                             ),
                           ],
                           Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
+                            padding: const EdgeInsets.only(top: 12.0),
                             child: Text(
                               post.title,
                               style: const TextStyle(
@@ -198,11 +199,47 @@ class PostCard extends ConsumerWidget {
                                 ),
                               ),
                             ),
+                          const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
+                                  //upvote
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        onPressed: isGuest
+                                            ? () {}
+                                            : () => upvotePost(ref),
+                                        icon: Icon(
+                                          Constants.up,
+                                          size: 30,
+                                          color: post.upvotes.contains(user.uid)
+                                              ? AppColors.redColor
+                                              : null,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${post.upvotes.length - post.downvotes.length == 0 ? 'Vote' : post.upvotes.length - post.downvotes.length}',
+                                        style: const TextStyle(fontSize: 17),
+                                      ),
+                                      IconButton(
+                                        onPressed: isGuest
+                                            ? () {}
+                                            : () => downvotePost(ref),
+                                        icon: Icon(
+                                          Constants.down,
+                                          size: 30,
+                                          color:
+                                              post.downvotes.contains(user.uid)
+                                                  ? AppColors.gradient1
+                                                  : null,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  //comments
                                   IconButton(
                                     onPressed: () =>
                                         navigateToComments(context),
@@ -216,6 +253,7 @@ class PostCard extends ConsumerWidget {
                                   ),
                                 ],
                               ),
+                              // moderatortools
                               ref
                                   .watch(getCommunityByNameProvider(
                                       post.communityName))
@@ -236,6 +274,7 @@ class PostCard extends ConsumerWidget {
                                     ),
                                     loading: () => const Loader(),
                                   ),
+                              //awards
                               IconButton(
                                 onPressed: isGuest
                                     ? () {}
@@ -261,7 +300,7 @@ class PostCard extends ConsumerWidget {
                                                   return GestureDetector(
                                                     onTap: () {},
                                                     child: Padding(
-                                                      padding:
+                                                       padding:
                                                           const EdgeInsets.all(
                                                               8.0),
                                                       child: Image.asset(

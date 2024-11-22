@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit/core/error/error_text.dart';
 import 'package:reddit/core/utils/community_members.dart';
 import 'package:reddit/core/widgets/loader.dart';
+import 'package:reddit/core/widgets/post_card.dart';
 import 'package:reddit/features/auth/controller/auth_controller.dart';
 import 'package:reddit/features/community/controller/community_controller.dart';
 import 'package:reddit/model/community_model.dart';
@@ -82,7 +83,8 @@ class CommunityDetailsScreen extends ConsumerWidget {
                                       ),
                                       child: const Text('Mod Tools'))
                                   : OutlinedButton(
-                                      onPressed: () =>joinOrLeaveCommunity(ref,context,community),
+                                      onPressed: () => joinOrLeaveCommunity(
+                                          ref, context, community),
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -106,7 +108,25 @@ class CommunityDetailsScreen extends ConsumerWidget {
                     )
                   ];
                 },
-                body: Text(community.description));
+                body: ref.watch(getCommunitPostProvider(communityname)).when(
+                    data: (posts) {
+                      if (posts.isEmpty) {
+                        return const Center(
+                          child: Text('No posts yet'),
+                        );
+                      }
+                      return ListView.builder(
+                          itemCount: posts.length,
+                          itemBuilder: (context, index) {
+                            return PostCard(
+                              post: posts[index],
+                            );
+                          });
+                    },
+                    error: (error, stackTrace) => ErrorText(
+                          text: error.toString(),
+                        ),
+                    loading: () => const Loader()));
           },
           error: (error, stackTrace) => ErrorText(text: error.toString()),
           loading: () => const Loader()),
