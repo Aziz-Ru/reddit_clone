@@ -44,10 +44,11 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     return ref.watch(authStateChangesProvider).when(
         data: (data) => MaterialApp.router(
-              title: 'Reddit',
+              title: 'Social Corner',
               theme: AppTheme.darkThemeMode,
               debugShowCheckedModeBanner: false,
               routerDelegate: RoutemasterDelegate(routesBuilder: (context) {
+                Future.delayed(const Duration(seconds: 1));
                 if (data != null) {
                   getUserData(ref, data);
                   if (user != null) {

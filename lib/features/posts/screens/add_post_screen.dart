@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit/core/themes/colors.dart';
+import 'package:reddit/core/widgets/custom_appbar.dart';
+import 'package:reddit/features/home/delegate/search_community_delegate.dart';
 import 'package:routemaster/routemaster.dart';
 
 class AddPostScreen extends ConsumerStatefulWidget {
@@ -15,13 +17,23 @@ class _AddPostScreenState extends ConsumerState<AddPostScreen> {
     Routemaster.of(context).push('/add-post/$type');
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     double cardHeightWidth = 120;
     double iconSize = 60;
     return Scaffold(
+      appBar: CustomAppBar(
+        title: 'Create Post',
+        onProfilePressed: () {
+          Scaffold.of(context).openEndDrawer();
+        },
+        onSearchPressed: () {
+          showSearch(context: context, delegate: SearchCommunityDelegate(ref));
+        },
+        onDrawerPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
+      ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,

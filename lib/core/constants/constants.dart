@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit/features/community/screens/community_screen.dart';
 import 'package:reddit/features/feed/screen/feed_screen.dart';
-import 'package:reddit/features/message/screens/message_screen.dart';
 import 'package:reddit/features/notifications/screens/notification_screen.dart';
 import 'package:reddit/features/posts/screens/add_post_screen.dart';
 
@@ -19,7 +18,6 @@ class Constants {
     FeedScreen(),
     CommunityScreen(),
     AddPostScreen(),
-    MessageScreen(),
     NotificationScreen()
   ];
 
@@ -29,7 +27,12 @@ class Constants {
       IconData(0xe801, fontFamily: 'MyFlutterApp', fontPackage: null);
 
   static const awardsPath = 'assets/images/awards';
-
+  static const titles = [
+    "Home",
+    "Community",
+    "Post",
+    "Notification",
+  ];
   static const awards = {
     'awesomeAns': '${Constants.awardsPath}/awesomeanswer.png',
     'gold': '${Constants.awardsPath}/gold.png',

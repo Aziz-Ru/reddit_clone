@@ -5,18 +5,14 @@ import 'package:reddit/features/auth/controller/auth_controller.dart';
 
 class SignInButton extends ConsumerWidget {
   const SignInButton({super.key});
-  // that gives us access to the AuthController
-
   void signInWithGoogle(WidgetRef ref, BuildContext context) {
-    // _authRepository.signInwithGoogle();
-
     ref.watch(authControllProvider.notifier).signInWithGoogle(context);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(16.0),
       child: ElevatedButton.icon(
         onPressed: () => signInWithGoogle(ref, context),
         icon: Image.asset(
@@ -25,12 +21,13 @@ class SignInButton extends ConsumerWidget {
         ),
         label: const Text(
           'Continue with Google',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         style: ElevatedButton.styleFrom(
             side: const BorderSide(color: Colors.grey, width: 1.1),
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
             minimumSize: const Size(double.infinity, 55),
             backgroundColor: Colors.transparent),
       ),

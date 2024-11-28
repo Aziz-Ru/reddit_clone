@@ -21,10 +21,8 @@ class CommunityRepository {
   CollectionReference get _communites =>
       _firestore.collection(FirebaseConstants.communitiesCollection);
 
-
-  CollectionReference get _posts=>
+  CollectionReference get _posts =>
       _firestore.collection(FirebaseConstants.postsCollection);
-
 
   FutureVoid createCommunity(Community community) async {
     try {
@@ -136,5 +134,11 @@ class CommunityRepository {
         .map((event) => event.docs
             .map((e) => Post.fromMap(e.data() as Map<String, dynamic>))
             .toList());
+  }
+
+  Stream<List<Community>> getCommunities() {
+    return _communites.snapshots().map((event) => event.docs
+        .map((e) => Community.fromMap(e.data() as Map<String, dynamic>))
+        .toList());
   }
 }

@@ -30,9 +30,11 @@ class PostCard extends ConsumerWidget {
     ref.read(postControllerProvider.notifier).downvote(post);
   }
 
-  // void awardPost(WidgetRef ref, String award, BuildContext context) async {
-  //   ref.read(postControllerProvider.notifier).awardPost(post: post, award: award, context: context);
-  // }
+  void awardPost(WidgetRef ref, String award, BuildContext context) async {
+    ref
+        .read(postControllerProvider.notifier)
+        .awardPost(post: post, award: award, context: context);
+  }
 
   void navigateToUser(BuildContext context) {
     Routemaster.of(context).push('/u/${post.uid}');
@@ -205,51 +207,85 @@ class PostCard extends ConsumerWidget {
                             children: [
                               Row(
                                 children: [
-                                  //upvote
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: isGuest
-                                            ? () {}
-                                            : () => upvotePost(ref),
-                                        icon: Icon(
-                                          Constants.up,
-                                          size: 30,
-                                          color: post.upvotes.contains(user.uid)
-                                              ? AppColors.redColor
-                                              : null,
+                                  //vote
+                                  Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: AppColors.borderColor,
                                         ),
-                                      ),
-                                      Text(
-                                        '${post.upvotes.length - post.downvotes.length == 0 ? 'Vote' : post.upvotes.length - post.downvotes.length}',
-                                        style: const TextStyle(fontSize: 17),
-                                      ),
-                                      IconButton(
-                                        onPressed: isGuest
-                                            ? () {}
-                                            : () => downvotePost(ref),
-                                        icon: Icon(
-                                          Constants.down,
-                                          size: 30,
-                                          color:
-                                              post.downvotes.contains(user.uid)
-                                                  ? AppColors.gradient1
-                                                  : null,
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: isGuest
+                                              ? () {}
+                                              : () => upvotePost(ref),
+                                          icon: Icon(
+                                            Constants.up,
+                                            size: 18,
+                                            color:
+                                                post.upvotes.contains(user.uid)
+                                                    ? AppColors.redColor
+                                                    : null,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  //comments
-                                  IconButton(
-                                    onPressed: () =>
-                                        navigateToComments(context),
-                                    icon: const Icon(
-                                      Icons.comment,
+                                        Text(
+                                          '${post.upvotes.length - post.downvotes.length == 0 ? 'Vote' : post.upvotes.length - post.downvotes.length}',
+                                          style: const TextStyle(fontSize: 17),
+                                        ),
+                                        IconButton(
+                                          onPressed: isGuest
+                                              ? () {}
+                                              : () => downvotePost(ref),
+                                          icon: Icon(
+                                            Constants.down,
+                                            size: 18,
+                                            color: post.downvotes
+                                                    .contains(user.uid)
+                                                ? AppColors.redColor
+                                                : null,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Text(
-                                    '${post.commentCount == 0 ? 'Comment' : post.commentCount}',
-                                    style: const TextStyle(fontSize: 17),
+                                  //comments
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => navigateToComments(context),
+                                    child: Container(
+                                      height: 40,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: AppColors.borderColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            post.commentCount > 100
+                                                ? MainAxisAlignment.spaceBetween
+                                                : MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.comment,
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            '${post.commentCount == 0 ? '' : post.commentCount}',
+                                            style:
+                                                const TextStyle(fontSize: 17),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -298,9 +334,13 @@ class PostCard extends ConsumerWidget {
                                                       user.awards[index];
 
                                                   return GestureDetector(
-                                                    onTap: () {},
+                                                    onTap: () => awardPost(
+                                                      ref,
+                                                      award,
+                                                      context,
+                                                    ),
                                                     child: Padding(
-                                                       padding:
+                                                      padding:
                                                           const EdgeInsets.all(
                                                               8.0),
                                                       child: Image.asset(

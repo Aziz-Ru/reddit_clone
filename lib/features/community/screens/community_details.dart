@@ -132,4 +132,6 @@ class CommunityDetailsScreen extends ConsumerWidget {
           loading: () => const Loader()),
     );
   }
+
+
 }

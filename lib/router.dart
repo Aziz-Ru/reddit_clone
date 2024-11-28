@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit/features/auth/screens/login_screen.dart';
+import 'package:reddit/features/community/screens/add_community_screen.dart';
 import 'package:reddit/features/community/screens/add_mods_screen.dart';
 import 'package:reddit/features/community/screens/community_details.dart';
 import 'package:reddit/features/community/screens/community_screen.dart';
@@ -18,7 +19,8 @@ final loggedOutRoute = RouteMap(routes: {
 
 final loggedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child: HomeScreen()),
-  '/create-community': (_) => const MaterialPage(child: CommunityScreen()),
+  '/community': (_) => const MaterialPage(child: CommunityScreen()),
+  '/add-community': (_) => const MaterialPage(child: AddCommunityScreen()),
   '/community/:name': (route) => MaterialPage(
       child:
           CommunityDetailsScreen(communityname: route.pathParameters['name']!)),

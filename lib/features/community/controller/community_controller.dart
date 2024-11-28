@@ -43,6 +43,10 @@ final getCommunitPostProvider = StreamProvider.family((ref, String name) {
   return ref.read(communityProvider.notifier).getCommunityPosts(name);
 });
 
+final getAllCommunitiesProvider = StreamProvider((ref) {
+  return ref.read(communityProvider.notifier).getAllCommunities();
+});
+
 class CommunityController extends StateNotifier<bool> {
   final CommunityRepository _communityRepository;
   final SupabaseStorageRepository _supabaseStorageRepository;
@@ -155,5 +159,9 @@ class CommunityController extends StateNotifier<bool> {
 
   Stream<List<Post>> getCommunityPosts(String name) {
     return _communityRepository.getCommunityPosts(name);
+  }
+
+  Stream<List<Community>> getAllCommunities() {
+    return _communityRepository.getCommunities();
   }
 }

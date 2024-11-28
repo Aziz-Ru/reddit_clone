@@ -9,7 +9,7 @@ class CommunityListDrawer extends ConsumerWidget {
   const CommunityListDrawer({super.key});
 
   void navigateToCreateCommunity(BuildContext context) {
-    Routemaster.of(context).push('/create-community');
+    Routemaster.of(context).push('/add-community');
   }
 
   void navigateToCommunity(BuildContext context, String name) {
@@ -35,7 +35,7 @@ class CommunityListDrawer extends ConsumerWidget {
                         final community = communities[index];
 
                         return ListTile(
-                          title: Text("r/${community.name}"),
+                          title: Text("c/${community.name}"),
                           leading: CircleAvatar(
                             backgroundImage: NetworkImage(community.avatar),
                           ),

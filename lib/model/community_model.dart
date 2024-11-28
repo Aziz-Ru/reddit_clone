@@ -8,6 +8,7 @@ class Community {
   final String avatar;
   final List<String> members;
   final List<String> mods;
+  
   Community({
     required this.id,
     required this.name,

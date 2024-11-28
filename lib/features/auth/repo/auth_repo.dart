@@ -27,6 +27,7 @@ class AuthRepository {
       : _firestore = firestore,
         _auth = auth,
         _googleSignIn = googleSignIn;
+        
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
 

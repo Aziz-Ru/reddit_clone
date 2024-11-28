@@ -30,9 +30,22 @@ class LoginScreen extends ConsumerWidget {
                   const SizedBox(
                     height: 15,
                   ),
-                  const Text(
-                    "Log in to Reddit",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Log in to",
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        " Social Corner",
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: 20,
