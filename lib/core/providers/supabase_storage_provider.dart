@@ -23,9 +23,8 @@ class SupabaseStorageRepository {
     try {
       await _client.storage.from('blog_images').upload(id, image);
 
-      final bannerUrl = await _client.storage
-          .from('blog_images')
-          .createSignedUrl(id, 60 * 60 * 24 * 365);
+      final bannerUrl =
+          await _client.storage.from('blog_images').getPublicUrl(id);
 
       return right(bannerUrl);
     } catch (e) {

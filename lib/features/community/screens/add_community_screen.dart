@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit/core/utils/show_snackbar.dart';
-import 'package:reddit/core/widgets/loader.dart';
 import 'package:reddit/features/community/controller/community_controller.dart';
 
 class AddCommunityScreen extends ConsumerStatefulWidget {
@@ -22,8 +21,7 @@ class _AddCommunityScreenState extends ConsumerState<AddCommunityScreen> {
       showSnackBar(context, 'Please fill all fields');
       return;
     }
-
-    ref.read(communityProvider.notifier).createCommunity(
+    ref.read(communityProvider.notifier).isCommunityExist(
         _namecontroller.text.trim(),
         _descriptioncontroller.text.trim(),
         context);
@@ -39,14 +37,18 @@ class _AddCommunityScreenState extends ConsumerState<AddCommunityScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(communityProvider);
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: const Text('Create Community'),
+        title: const Text(
+          'Create Community',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: isLoading
-          ? const Loader()
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
           : SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Padding(
@@ -98,7 +100,7 @@ class _AddCommunityScreenState extends ConsumerState<AddCommunityScreen> {
                           minimumSize: const Size(double.infinity, 50),
                           backgroundColor: Colors.blueAccent),
                       child: const Text(
-                        'Create Community',
+                        'Next',
                         style: TextStyle(fontSize: 17, color: Colors.white),
                       ),
                     )

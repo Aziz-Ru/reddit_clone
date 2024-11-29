@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit/features/community/screens/community_screen.dart';
 import 'package:reddit/features/feed/screen/feed_screen.dart';
-import 'package:reddit/features/notifications/screens/notification_screen.dart';
 import 'package:reddit/features/posts/screens/add_post_screen.dart';
 
 class Constants {
@@ -18,7 +17,7 @@ class Constants {
     FeedScreen(),
     CommunityScreen(),
     AddPostScreen(),
-    NotificationScreen()
+    // NotificationScreen()
   ];
 
   static const IconData up =

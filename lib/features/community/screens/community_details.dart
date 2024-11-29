@@ -59,7 +59,7 @@ class CommunityDetailsScreen extends ConsumerWidget {
                             Column(
                               children: [
                                 Text(
-                                  'r/${community.name}',
+                                  'c/${community.name}',
                                   style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500),
@@ -132,6 +132,4 @@ class CommunityDetailsScreen extends ConsumerWidget {
           loading: () => const Loader()),
     );
   }
-
-
 }

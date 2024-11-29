@@ -141,4 +141,25 @@ class CommunityRepository {
         .map((e) => Community.fromMap(e.data() as Map<String, dynamic>))
         .toList());
   }
+
+  FutureVoid isCommunityExist(String name) async {
+    try {
+      final res = await _communites.doc(name).get();
+      if (!res.exists) {
+        return right(null);
+      }
+      return left(Failure('Community already exists!'));
+    } on FirebaseException catch (e) {
+      return left(Failure(e.message!));
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  Stream<List<Community>> getCommunitiesByTopic(String topic) {
+    return _communites.where('topics', arrayContains: topic).snapshots().map(
+        (event) => event.docs
+            .map((e) => Community.fromMap(e.data() as Map<String, dynamic>))
+            .toList());
+  }
 }

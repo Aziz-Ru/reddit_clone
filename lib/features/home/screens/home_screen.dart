@@ -34,10 +34,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.group), label: 'Communities'),
             BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Create'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), label: 'Notifications'),
           ]),
       body: Constants.tabWidgets[_page],
     );
   }
 }
+
+ // BottomNavigationBarItem(
+            //     icon: Icon(Icons.notifications), label: 'Notifications'),

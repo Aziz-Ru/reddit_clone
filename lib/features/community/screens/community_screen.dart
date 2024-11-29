@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit/core/error/error_text.dart';
-import 'package:reddit/core/themes/colors.dart';
-import 'package:reddit/core/utils/show_snackbar.dart';
 import 'package:reddit/core/widgets/community_card.dart';
 import 'package:reddit/core/widgets/custom_appbar.dart';
 import 'package:reddit/core/widgets/loader.dart';
@@ -10,7 +8,6 @@ import 'package:reddit/features/auth/controller/auth_controller.dart';
 import 'package:reddit/features/community/controller/community_controller.dart';
 import 'package:reddit/features/community/controller/topic_controller.dart';
 import 'package:reddit/features/home/delegate/search_community_delegate.dart';
-import 'package:reddit/model/community_model.dart';
 import 'package:routemaster/routemaster.dart';
 
 class CommunityScreen extends ConsumerStatefulWidget {
@@ -22,14 +19,6 @@ class CommunityScreen extends ConsumerStatefulWidget {
 }
 
 class _CommunityScreenState extends ConsumerState<CommunityScreen> {
-  
-  
-
-
- 
-
- 
-
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(communityProvider);
@@ -63,10 +52,16 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
                             return Wrap(
                               spacing: 8,
                               children: topics.map((topic) {
-                                return Chip(
-                                    color: const WidgetStatePropertyAll(
-                                        Colors.blue),
-                                    label: Text(topic.name));
+                                return GestureDetector(
+                                  onTap: () {
+                                    Routemaster.of(context)
+                                        .push('/topics/${topic.search}');
+                                  },
+                                  child: Chip(
+                                      color: const WidgetStatePropertyAll(
+                                          Colors.blue),
+                                      label: Text(topic.name)),
+                                );
                               }).toList(),
                             );
                           },
@@ -82,7 +77,11 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
                             data: (communities) {
                               return Column(
                                 children: communities.map((community) {
-                                  return CommunityCard(community: community, ref: ref, user: user);
+                                  return communityCard(
+                                      context: context,
+                                      community: community,
+                                      ref: ref,
+                                      user: user);
                                 }).toList(),
                               );
                             },

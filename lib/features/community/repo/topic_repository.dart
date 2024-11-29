@@ -27,4 +27,13 @@ class TopicRepository {
       return topics;
     });
   }
+
+  Future<TopicModel> getTopicBySearchName(String s) async {
+    final res = await _communites.where('search', isEqualTo: s).get();
+    if (res.docs.isNotEmpty) {
+      return TopicModel.fromMap(res.docs.first.data() as Map<String, dynamic>);
+    } else {
+      return TopicModel(name: '', search: '');
+    }
+  }
 }

@@ -12,6 +12,12 @@ final getTopicsProvider = StreamProvider<List<TopicModel>>((ref) {
   return controller.getTopics();
 });
 
+
+final getTopicByNameProvider = FutureProvider.family<TopicModel, String>((ref, name) {
+  final controller = ref.watch(topicControllerProvider);
+  return controller.getTopicByName(name);
+});
+
 class TopicController {
   final TopicRepository _topicRepository;
 
@@ -20,5 +26,9 @@ class TopicController {
 
   Stream<List<TopicModel>> getTopics() {
     return _topicRepository.getTopics();
+  }
+
+  Future<TopicModel> getTopicByName(String s) async {
+    return _topicRepository.getTopicBySearchName(s);
   }
 }

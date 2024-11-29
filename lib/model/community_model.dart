@@ -8,7 +8,8 @@ class Community {
   final String avatar;
   final List<String> members;
   final List<String> mods;
-  
+  final List<String> topics;
+
   Community({
     required this.id,
     required this.name,
@@ -17,6 +18,7 @@ class Community {
     required this.avatar,
     required this.members,
     required this.mods,
+    required this.topics,
   });
 
   Community copyWith({
@@ -27,6 +29,7 @@ class Community {
     String? avatar,
     List<String>? members,
     List<String>? mods,
+    List<String>? topics,
   }) {
     return Community(
       id: id ?? this.id,
@@ -36,6 +39,7 @@ class Community {
       avatar: avatar ?? this.avatar,
       members: members ?? this.members,
       mods: mods ?? this.mods,
+      topics: topics ?? this.topics,
     );
   }
 
@@ -48,6 +52,7 @@ class Community {
       'avatar': avatar,
       'members': members,
       'mods': mods,
+      'topics': topics.toList(),
     };
   }
 
@@ -60,6 +65,7 @@ class Community {
       avatar: map['avatar'] ?? '',
       members: List<String>.from(map['members']),
       mods: List<String>.from(map['mods']),
+      topics: List<String>.from(map['topics']),
     );
   }
 

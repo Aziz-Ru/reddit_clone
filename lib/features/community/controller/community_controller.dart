@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -47,6 +48,10 @@ final getAllCommunitiesProvider = StreamProvider((ref) {
   return ref.read(communityProvider.notifier).getAllCommunities();
 });
 
+final getCommunityByTopicProvider = StreamProvider.family((ref, String topic) {
+  return ref.read(communityProvider.notifier).getCommunityByTopic(topic);
+});
+
 class CommunityController extends StateNotifier<bool> {
   final CommunityRepository _communityRepository;
   final SupabaseStorageRepository _supabaseStorageRepository;
@@ -60,12 +65,18 @@ class CommunityController extends StateNotifier<bool> {
         _supabaseStorageRepository = supabaseStorageRepository,
         super(false);
 
-  Future<void> createCommunity(
-      String name, String description, BuildContext context) async {
+  Future<void> createCommunity({
+    required String name,
+    required String description,
+    required List<String> topics,
+    required File? bannerImage,
+    required File? avatarImage,
+    required BuildContext context,
+  }) async {
     state = true;
     final uid = _ref.read(userProvider)?.uid ?? '';
 
-    final community = Community(
+    Community community = Community(
       avatar: Constants.avatarDefault,
       banner: Constants.bannerDefault,
       name: name,
@@ -73,13 +84,37 @@ class CommunityController extends StateNotifier<bool> {
       id: name,
       members: [uid],
       mods: [uid],
+      topics: topics,
     );
+
+    const uuid = Uuid();
+    final bannerUid = 'banner/${community.id}_${uuid.v1()}';
+    final avatarUid = 'avatar/${community.id}_${uuid.v1()}';
+
+    if (bannerImage != null) {
+      final imageUploadResponse = await _supabaseStorageRepository.uploadImage(
+          image: bannerImage, id: bannerUid);
+      imageUploadResponse.fold((l) => showSnackBar(context, l.message), (r) {
+        community = community.copyWith(banner: r);
+      });
+    }
+    if (avatarImage != null) {
+      final imageUploadResponse = await _supabaseStorageRepository.uploadImage(
+          image: avatarImage, id: avatarUid);
+
+      imageUploadResponse.fold((l) => showSnackBar(context, l.message), (r) {
+        community = community.copyWith(avatar: r);
+      });
+    }
 
     final response = await _communityRepository.createCommunity(community);
     state = false;
-    response.fold((l) => showSnackBar(context, l.message), (r) {
+    response.fold((l) {
+      log(l.message);
+      showSnackBar(context, l.message);
+    }, (r) {
       showSnackBar(context, 'Community created successfully');
-      Routemaster.of(context).pop();
+      Routemaster.of(context).push('/');
     });
   }
 
@@ -163,5 +198,21 @@ class CommunityController extends StateNotifier<bool> {
 
   Stream<List<Community>> getAllCommunities() {
     return _communityRepository.getCommunities();
+  }
+
+  void isCommunityExist(
+      String name, String description, BuildContext context) async {
+    final res = await _communityRepository.isCommunityExist(name);
+
+    res.fold((l) {
+      showSnackBar(context, l.message);
+    }, (r) {
+      Routemaster.of(context)
+          .push('/style-community?name=$name&description=$description');
+    });
+  }
+
+  Stream<List<Community>> getCommunityByTopic(String topic) {
+    return _communityRepository.getCommunitiesByTopic(topic);
   }
 }

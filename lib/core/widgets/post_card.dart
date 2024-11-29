@@ -103,7 +103,7 @@ class PostCard extends ConsumerWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'r/${post.communityName}',
+                                          'c/${post.communityName}',
                                           style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
