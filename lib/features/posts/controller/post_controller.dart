@@ -245,6 +245,37 @@ class PostController extends StateNotifier<bool> {
     res.fold((l) => showSnackBar(context, l.message), (r) => null);
   }
 
+  void addReply({
+    required BuildContext context,
+    required String text,
+    required Comment comment,
+  }) async {
+    final user = _ref.read(userProvider)!;
+    String commentId = const Uuid().v1();
+    comment = comment.copyWith(
+      replies: [
+        ...comment.replies,
+        Comment(
+          id: commentId,
+          text: text,
+          createdAt: DateTime.now(),
+          postId: comment.id,
+          username: user.name,
+          profilePic: user.profilePic,
+          parentCommentId: comment.id,
+        ),
+      ],
+    );
+
+    final res = await _postRepository.addReply(comment);
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKarma(UserKarma.comment);
+    res.fold((l) => showSnackBar(context, l.message), (r) {
+      Routemaster.of(context).pop();
+    });
+  }
+
   void awardPost({
     required Post post,
     required String award,

@@ -36,13 +36,16 @@ class LoginScreen extends ConsumerWidget {
                       Text(
                         "Log in to",
                         style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold),
+                            fontSize: 30, fontWeight: FontWeight.w800),
+                      ),
+                      SizedBox(
+                        width: 5,
                       ),
                       Text(
-                        " Social Corner",
+                        "Reddit",
                         style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 33,
+                          fontWeight: FontWeight.w900,
                         ),
                       ),
                     ],

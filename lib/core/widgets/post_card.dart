@@ -1,4 +1,5 @@
 import 'package:any_link_preview/any_link_preview.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit/core/constants/constants.dart';
@@ -173,8 +174,8 @@ class PostCard extends ConsumerWidget {
                               width: double.infinity,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
-                                child: Image.network(
-                                  post.link!,
+                                child: CachedNetworkImage(
+                                  imageUrl: post.link!,
                                   fit: BoxFit.cover,
                                 ),
                               ),

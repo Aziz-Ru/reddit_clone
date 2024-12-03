@@ -22,35 +22,40 @@ class FeedScreen extends ConsumerWidget {
             },
             onSearchPressed: () {
               showSearch(
-                context: context, delegate: SearchCommunityDelegate(ref));
+                  context: context, delegate: SearchCommunityDelegate(ref));
             },
             onDrawerPressed: () {
               Scaffold.of(context).openDrawer();
             },
           ),
         ),
-        body: ref.watch(userCommunityProvider).when(
-              data: (communities) => ref.watch(guestPostsProvider).when(
-                    data: (data) {
-                      return ListView.builder(
-                        itemCount: data.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final post = data[index];
-                          return PostCard(post: post);
+        body: RefreshIndicator(
+            onRefresh: () async {
+              // ignore: unused_result
+              ref.refresh(guestPostsProvider);
+            },
+            child: ref.watch(userCommunityProvider).when(
+                  data: (communities) => ref.watch(guestPostsProvider).when(
+                        data: (data) {
+                          return ListView.builder(
+                            itemCount: data.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final post = data[index];
+                              return PostCard(post: post);
+                            },
+                          );
                         },
-                      );
-                    },
-                    error: (error, stackTrace) {
-                      return ErrorText(
-                        text: error.toString(),
-                      );
-                    },
-                    loading: () => const Loader(),
+                        error: (error, stackTrace) {
+                          return ErrorText(
+                            text: error.toString(),
+                          );
+                        },
+                        loading: () => const Loader(),
+                      ),
+                  error: (error, stackTrace) => ErrorText(
+                    text: error.toString(),
                   ),
-              error: (error, stackTrace) => ErrorText(
-                text: error.toString(),
-              ),
-              loading: () => const Loader(),
-            ));
+                  loading: () => const Loader(),
+                )));
   }
 }

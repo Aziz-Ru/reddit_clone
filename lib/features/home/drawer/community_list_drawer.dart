@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit/core/error/error_text.dart';
@@ -37,7 +38,8 @@ class CommunityListDrawer extends ConsumerWidget {
                         return ListTile(
                           title: Text("c/${community.name}"),
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(community.avatar),
+                            backgroundImage:
+                                CachedNetworkImageProvider(community.avatar),
                           ),
                           onTap: () =>
                               navigateToCommunity(context, community.name),

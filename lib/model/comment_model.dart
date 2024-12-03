@@ -5,31 +5,41 @@ class Comment {
   final String postId;
   final String username;
   final String profilePic;
-  Comment({
-    required this.id,
-    required this.text,
-    required this.createdAt,
-    required this.postId,
-    required this.username,
-    required this.profilePic,
-  });
+  final List<Comment> replies;
+  final int replyCount;
+  final String? parentCommentId;
 
-  Comment copyWith({
-    String? id,
-    String? text,
-    DateTime? createdAt,
-    String? postId,
-    String? username,
-    String? profilePic,
-  }) {
+  Comment(
+      {required this.id,
+      required this.text,
+      required this.createdAt,
+      required this.postId,
+      required this.username,
+      required this.profilePic,
+      this.replies = const [],
+      this.replyCount = 0,
+      this.parentCommentId});
+
+  Comment copyWith(
+      {String? id,
+      String? text,
+      DateTime? createdAt,
+      String? postId,
+      String? username,
+      String? profilePic,
+      List<Comment>? replies,
+      int? replyCount,
+      String? parentCommentId}) {
     return Comment(
-      id: id ?? this.id,
-      text: text ?? this.text,
-      createdAt: createdAt ?? this.createdAt,
-      postId: postId ?? this.postId,
-      username: username ?? this.username,
-      profilePic: profilePic ?? this.profilePic,
-    );
+        id: id ?? this.id,
+        text: text ?? this.text,
+        createdAt: createdAt ?? this.createdAt,
+        postId: postId ?? this.postId,
+        username: username ?? this.username,
+        profilePic: profilePic ?? this.profilePic,
+        replies: replies ?? this.replies,
+        replyCount: replyCount ?? this.replyCount,
+        parentCommentId: parentCommentId ?? this.parentCommentId);
   }
 
   Map<String, dynamic> toMap() {
@@ -40,6 +50,9 @@ class Comment {
       'postId': postId,
       'username': username,
       'profilePic': profilePic,
+      'replies': replies.map((x) => x.toMap()).toList(),
+      'replyCount': replyCount,
+      'parentCommentId': parentCommentId ?? ''
     };
   }
 
@@ -51,7 +64,18 @@ class Comment {
       postId: map['postId'] ?? '',
       username: map['username'] ?? '',
       profilePic: map['profilePic'] ?? '',
+      replies: List<Comment>.from(
+          map['replies']?.map((x) => Comment.fromMap(x)) ?? []),
+      replyCount: map['replyCount'] ?? 0,
+      parentCommentId: map['parentCommentId'] ?? '',
     );
+  }
+
+  Comment addReply(Comment reply) {
+    return copyWith(
+        replies: [...replies, reply],
+        replyCount: replyCount + 1,
+        parentCommentId: id);
   }
 
   @override

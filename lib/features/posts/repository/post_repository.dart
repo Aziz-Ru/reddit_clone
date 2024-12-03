@@ -170,4 +170,16 @@ class PostRepository {
       return left(Failure(e.toString()));
     }
   }
+
+  FutureVoid addReply(Comment comment) async {
+    try {
+      await _comments.doc(comment.id).update(comment.toMap());
+
+      return right(null);
+    } on FirebaseException catch (e) {
+      return left(Failure(e.message!));
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
 }
