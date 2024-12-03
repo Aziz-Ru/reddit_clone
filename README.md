@@ -1,53 +1,28 @@
-Positioned(
-bottom: 0,
-left: 0,
-right: 0,
-child: Container(
-padding: const EdgeInsets.symmetric(
-vertical: 10,
-horizontal: 4,
-),
-child: Column(
-crossAxisAlignment: CrossAxisAlignment.start,
-children: [
-Row(
-children: [
-CircleAvatar(
-backgroundImage: NetworkImage(
-user.profilePic,
-),
-radius: 18,
-),
-Expanded(
-child: Padding(
-padding: const EdgeInsets.only(left: 16.0),
-child: Column(
-crossAxisAlignment:
-CrossAxisAlignment.start,
-children: [
-TextField(
-controller: commentController,
-decoration: const InputDecoration(
-hintText: 'Add a comment',
-),
-),
-Row(
-children: [
-IconButton(
-onPressed: () {
-addComment(data);
-},
-icon: const Icon(Icons.send),
-),
-],
-),
-],
-),
-),
-),
-],
-),
-],
-),
-),
-),
+## Reddit Clone
+
+This App Feature
+
+- Google Authentication
+- Create & Join A Community
+- Create Post & Post types: text, link, image
+
+- Upvote/downvote system
+
+- Nested comments
+
+- Give Awards
+
+- Update Profile & Banner
+
+- Add New Moderator
+
+<img src="images/Screenshot_2024-12-04-02-54-37-55_9c2a6cedc7552e61f5a3ed862fbcbe76.jpg">
+
+<img src="images/Screenshot_2024-12-04-02-54-46-94_9c2a6cedc7552e61f5a3ed862fbcbe76.jpg">
+
+<img src="images/Screenshot_2024-12-04-02-55-22-00_9c2a6cedc7552e61f5a3ed862fbcbe76.jpg">
+
+<img src="images/Screenshot_2024-12-04-02-55-34-81_9c2a6cedc7552e61f5a3ed862fbcbe76.jpg">
+<img src="images/Screenshot_2024-12-04-02-55-51-51_9c2a6cedc7552e61f5a3ed862fbcbe76.jpg">
+<img src="images/Screenshot_2024-12-04-02-56-00-51_9c2a6cedc7552e61f5a3ed862fbcbe76.jpg">
+<img src="images/Screenshot_2024-12-04-03-04-55-19_9c2a6cedc7552e61f5a3ed862fbcbe76.jpg">
