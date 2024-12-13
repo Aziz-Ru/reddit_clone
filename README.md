@@ -27,7 +27,6 @@ This App Feature
 </div>
 <div>
 
-
 <img src="images/Screenshot_2024-12-04-02-55-34-81_9c2a6cedc7552e61f5a3ed862fbcbe76.jpg"  width="200">
 <img src="images/Screenshot_2024-12-04-02-55-51-51_9c2a6cedc7552e61f5a3ed862fbcbe76.jpg"  width="200">
 <img src="images/Screenshot_2024-12-04-02-56-00-51_9c2a6cedc7552e61f5a3ed862fbcbe76.jpg"  width="200">
